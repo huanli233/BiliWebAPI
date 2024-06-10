@@ -17,7 +17,7 @@ public class HttpResponseInterceptor implements Interceptor {
 	}
 	
 	private Response handleCookiesSet(Response response) {
-		List<String> setCookies = response.headers("Set-Cookie");
+		List<String> setCookies = response.headers(HttpConstants.HeaderNames.SET_COOKIE);
 		if (setCookies.isEmpty()) return response;
 		for (String string : setCookies) {
 			Cookies cookieItem = new Cookies(string);
