@@ -20,4 +20,9 @@ public class HttpConstants {
 		public static final String SEC_CH_UA_MOBILE = "?0";
 	}
 	
+	public static class Protocols {
+		public static final String HTTP = "http://";
+		public static final String HTTPS = "https://";
+	}
+	
 }

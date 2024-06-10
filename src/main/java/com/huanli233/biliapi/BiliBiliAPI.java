@@ -6,7 +6,9 @@ import com.huanli233.biliapi.api.LoginInfo;
 import com.huanli233.biliapi.httplib.HttpManager;
 
 public class BiliBiliAPI {
-	public static final String BASE_API_URL = "https://api.bilibili.com";
+	public static final String BASE_API_URL = "api.bilibili.com";
+	public static final String PASSPORT_URL = "passport.bilibili.com";
+	public static final String VC_API_URL = "api.vc.bilibili.com";
 	
 	private static BiliBiliAPI INSTANCE;
 	public static BiliBiliAPI getInstance() {

@@ -36,7 +36,7 @@ public class HttpManager {
 					.addCallAdapterFactory(RxJava3CallAdapterFactory.create())
 					.addConverterFactory(GsonConverterFactory.create(GsonUtil.builder().create()))
 					.client(mHttpClient)
-					.baseUrl(BiliBiliAPI.BASE_API_URL)
+					.baseUrl(HttpConstants.Protocols.HTTPS + BiliBiliAPI.BASE_API_URL)
 					.build();
 		}
 		return this.mRetrofit;
