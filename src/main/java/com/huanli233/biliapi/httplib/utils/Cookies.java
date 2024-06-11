@@ -66,7 +66,9 @@ public class Cookies {
     }
     
     public void setOnChange(Runnable runnable) {
-    	this.onChange = runnable;
+    	if (this.onChange == null) {
+    		this.onChange = runnable;
+		}
     }
 
 }

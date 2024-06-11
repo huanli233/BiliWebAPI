@@ -2,7 +2,7 @@ package com.huanli233.biliapi;
 
 import java.util.HashMap;
 
-import com.huanli233.biliapi.api.LoginInfo;
+import com.huanli233.biliapi.api.login.LoginInfo;
 import com.huanli233.biliapi.httplib.HttpManager;
 
 public class BiliBiliAPI {
@@ -25,6 +25,9 @@ public class BiliBiliAPI {
 		this.loginInfo = loginInfo;
 	}
 	public LoginInfo getLoginInfo() {
+		if (this.loginInfo == null) {
+			this.loginInfo = new LoginInfo();
+		}
 		return this.loginInfo;
 	}
 

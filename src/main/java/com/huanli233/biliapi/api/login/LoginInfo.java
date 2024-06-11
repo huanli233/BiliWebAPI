@@ -1,16 +1,26 @@
-package com.huanli233.biliapi.api;
+package com.huanli233.biliapi.api.login;
 
+import com.huanli233.biliapi.api.base.Base;
 import com.huanli233.biliapi.httplib.utils.Cookies;
 
-public class LoginInfo {
+public class LoginInfo extends Base {
+	
+	public static final String LOGIN_SOURCE_MAIN_WEB = "main_web";
+	public static final String LOGIN_SOURCE_MAIN_MINI = "main_mini";
 	
 	private Cookies cookies;
 	private LoginInfoChangeListener loginInfoChangeListener;
+	private final Runnable onCookieChange = () -> {
+		if (loginInfoChangeListener != null) {
+			loginInfoChangeListener.onLoginInfoChange(this);
+		}
+	};
 	
 	public Cookies getCookies() {
-		if (cookies != null) {
-			cookies.setOnChange(() -> loginInfoChangeListener.onLoginInfoChange(this));
+		if (cookies == null) {
+			cookies = new Cookies("");
 		}
+		cookies.setOnChange(onCookieChange);
 		return cookies;
 	}
 	
@@ -37,7 +47,7 @@ public class LoginInfo {
 		return cookies.getOrDefault("bili_jct", "");
 	}
 	
-	interface LoginInfoChangeListener {
+	public interface LoginInfoChangeListener {
 		void onLoginInfoChange(LoginInfo loginInfo);
 	}
 

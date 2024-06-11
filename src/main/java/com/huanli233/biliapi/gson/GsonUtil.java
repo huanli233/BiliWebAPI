@@ -6,7 +6,8 @@ public class GsonUtil {
 	
 	public static GsonBuilder builder() {
 		return new GsonBuilder()
-				.excludeFieldsWithoutExposeAnnotation();
+				.excludeFieldsWithoutExposeAnnotation()
+				.setLenient();
 	}
 	
 }
