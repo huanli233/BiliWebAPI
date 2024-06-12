@@ -13,11 +13,6 @@
   	</dependency>
   	<dependency>
       <groupId>com.squareup.retrofit2</groupId>
-      <artifactId>adapter-rxjava3</artifactId>
-      <version>2.11.0</version>
-  	</dependency>
-  	<dependency>
-      <groupId>com.squareup.retrofit2</groupId>
       <artifactId>converter-gson</artifactId>
       <version>2.9.0</version>
   	</dependency>
@@ -25,6 +20,7 @@
       <groupId>org.projectlombok</groupId>
       <artifactId>lombok</artifactId>
       <version>1.18.32</version>
+        <scope>provided</scope>
   	</dependency>
   	<dependency>
         <groupId>junit</groupId>

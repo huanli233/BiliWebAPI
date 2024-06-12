@@ -3,12 +3,15 @@ package com.huanli233.biliapi.api.login;
 import com.huanli233.biliapi.api.base.Base;
 import com.huanli233.biliapi.httplib.utils.Cookies;
 
+import lombok.Getter;
+
 public class LoginInfo extends Base {
 	
 	public static final String LOGIN_SOURCE_MAIN_WEB = "main_web";
 	public static final String LOGIN_SOURCE_MAIN_MINI = "main_mini";
 	
 	private Cookies cookies;
+	private @Getter String refreshToken;
 	private LoginInfoChangeListener loginInfoChangeListener;
 	private final Runnable onCookieChange = () -> {
 		if (loginInfoChangeListener != null) {
@@ -26,6 +29,13 @@ public class LoginInfo extends Base {
 	
 	public void setCookies(Cookies cookies) {
 		this.cookies = cookies;
+		if (loginInfoChangeListener != null) {
+			loginInfoChangeListener.onLoginInfoChange(this);
+		}
+	}
+	
+	public void setRefreshToken(String refreshToken) {
+		this.refreshToken = refreshToken;
 		if (loginInfoChangeListener != null) {
 			loginInfoChangeListener.onLoginInfoChange(this);
 		}

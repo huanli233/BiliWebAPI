@@ -1,6 +1,7 @@
 package com.huanli233.biliapi.httplib;
 
 import java.io.IOException;
+
 import com.huanli233.biliapi.BiliBiliAPI;
 import com.huanli233.biliapi.httplib.annotations.API;
 import com.huanli233.biliapi.httplib.annotations.Queries;
@@ -42,7 +43,7 @@ public class HttpRequestInterceptor implements Interceptor {
 		Invocation invocation;
 		if (request == null || (invocation = (Invocation) request.tag(Invocation.class)) == null) return request;
 		API api;
-		if ((api = invocation.method().getAnnotation(API.class)) != null || (api = invocation.instance().getClass().getAnnotation(API.class)) != null) {
+		if ((api = invocation.method().getAnnotation(API.class)) != null) {
 			return request.newBuilder()
 					.url(request.url().newBuilder().host(api.value()).build())
 					.build();

@@ -7,8 +7,8 @@ import lombok.Data;
 
 @Data
 public class Country {
-	@Expose int id;
-	@Expose String cname;
+	@Expose private int id;
+	@Expose private String cname;
 	@SerializedName("country_id")
-	@Expose String countryId;
+	@Expose private String countryId;
 }
