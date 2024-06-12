@@ -30,8 +30,8 @@ public class WbiUtil {
 		WbiSignKeyInfo wbiSignKeyInfo;
 		long currentTimeStamp = System.currentTimeMillis();
         if ((wbiSignKeyInfo = BiliBiliAPI.getInstance().getWbiSignDataManager().getWbiData()) != null 
-        		&& (wbiSignKeyInfo.getLastUpdateTimestamp() < currentTimeStamp && currentTimeStamp - wbiSignKeyInfo.getLastUpdateTimestamp() > (24 * 60 * 60 * 1000))
-        		|| wbiSignKeyInfo.getLastUpdateTimestamp() >= currentTimeStamp
+        		&& ((wbiSignKeyInfo.getLastUpdateTimestamp() < currentTimeStamp && currentTimeStamp - wbiSignKeyInfo.getLastUpdateTimestamp() < (24 * 60 * 60 * 1000))
+        		|| wbiSignKeyInfo.getLastUpdateTimestamp() >= currentTimeStamp)
         		&& wbiSignKeyInfo.getMixinKey() != null) {
 			return wbiSignKeyInfo.getMixinKey();
 		} else {
