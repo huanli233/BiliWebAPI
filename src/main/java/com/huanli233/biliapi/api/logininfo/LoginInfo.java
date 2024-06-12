@@ -1,9 +1,13 @@
-package com.huanli233.biliapi.api.login;
+package com.huanli233.biliapi.api.logininfo;
 
+import com.huanli233.biliapi.BiliBiliAPI;
 import com.huanli233.biliapi.api.base.Base;
+import com.huanli233.biliapi.api.base.BaseResponse;
+import com.huanli233.biliapi.api.interfaces.ILoginInfoApi;
 import com.huanli233.biliapi.httplib.utils.Cookies;
 
 import lombok.Getter;
+import retrofit2.Call;
 
 public class LoginInfo extends Base {
 	
@@ -55,6 +59,10 @@ public class LoginInfo extends Base {
 	
 	public String getCsrf() {
 		return cookies.getOrDefault("bili_jct", "");
+	}
+	
+	public static Call<BaseResponse<NavInfo>> navInfo() {
+		return BiliBiliAPI.getInstance().getApi(ILoginInfoApi.class).requestNavInfo();
 	}
 	
 	public interface LoginInfoChangeListener {

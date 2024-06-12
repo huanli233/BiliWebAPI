@@ -3,8 +3,10 @@ package com.huanli233.biliapi.httplib;
 import java.io.IOException;
 
 import com.huanli233.biliapi.BiliBiliAPI;
+import com.huanli233.biliapi.api.utils.WbiUtil;
 import com.huanli233.biliapi.httplib.annotations.API;
 import com.huanli233.biliapi.httplib.annotations.Queries;
+import com.huanli233.biliapi.httplib.annotations.WbiSign;
 import com.huanli233.biliapi.httplib.utils.Cookies;
 
 import okhttp3.HttpUrl;
@@ -16,7 +18,7 @@ import retrofit2.Invocation;
 public class HttpRequestInterceptor implements Interceptor {
 
 	public Response intercept(Chain chain) throws IOException { 
-		return chain.proceed(processUrlParam(overrideUrl(handleHeaders(handleCookies(chain)).build())));
+		return chain.proceed(handleWbiSign(processUrlParam(overrideUrl(handleHeaders(handleCookies(chain)).build()))));
 	}
 	
 	private Request.Builder handleCookies(Chain chain) {
@@ -37,6 +39,27 @@ public class HttpRequestInterceptor implements Interceptor {
 				.header(HttpConstants.HeaderNames.SEC_CH_UA, HttpConstants.HeaderValues.SEC_CH_UA)
 				.header(HttpConstants.HeaderNames.SEC_CH_UA_PLATFORM, HttpConstants.HeaderValues.SEC_CH_UA_PLATFORM)
 				.header(HttpConstants.HeaderNames.SEC_CH_UA_MOBILE, HttpConstants.HeaderValues.SEC_CH_UA_MOBILE);
+	}
+	
+	private Request handleWbiSign(Request request) {
+		Invocation invocation;
+		if (request == null) return request;
+		if ((invocation = (Invocation) request.tag(Invocation.class)) != null) {
+			if (invocation.method().isAnnotationPresent(WbiSign.class)) {
+				try {
+					return request.newBuilder()
+							.url(WbiUtil.signUrl(request.url()))
+							.build();
+				} catch (Throwable e) {
+					if (BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler() != null) {
+						BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler().handleError(e);
+					} else {
+						throw new RuntimeException(e);
+					}
+				}
+			}
+		}
+		return request;
 	}
 	
 	private Request overrideUrl(Request request) {

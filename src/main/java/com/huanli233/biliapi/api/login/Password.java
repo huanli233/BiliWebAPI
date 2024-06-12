@@ -5,6 +5,7 @@ import com.google.gson.annotations.SerializedName;
 import com.huanli233.biliapi.BiliBiliAPI;
 import com.huanli233.biliapi.api.base.BaseResponse;
 import com.huanli233.biliapi.api.interfaces.ILoginApi;
+import com.huanli233.biliapi.api.logininfo.LoginInfo;
 
 import lombok.Data;
 import retrofit2.Call;
