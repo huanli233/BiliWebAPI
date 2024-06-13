@@ -17,26 +17,22 @@ import retrofit2.http.GET;
 import retrofit2.http.POST;
 import retrofit2.http.Query;
 
+@API(BiliBiliAPI.PASSPORT_URL)
 public interface ILoginApi {
 	@GET("/x/passport-login/captcha")
 	@Queries(keys = {"source"}, values = {"main_web"})
-	@API(BiliBiliAPI.PASSPORT_URL)
 	Call<BaseResponse<Captcha>> requestCaptcha();
 	
 	@GET("/x/passport-login/web/qrcode/generate")
-	@API(BiliBiliAPI.PASSPORT_URL)
 	Call<BaseResponse<QrCode>> requestQrCode();
 	
 	@GET("/x/passport-login/web/qrcode/poll")
-	@API(BiliBiliAPI.PASSPORT_URL)
 	Call<BaseResponse<QrCode.LoginResult>> qrCodeLogin(@Query("qrcode_key") String qrcodeKey);
 	
 	@GET("/web/generic/country/list")
-	@API(BiliBiliAPI.PASSPORT_URL)
 	Call<BaseResponse<CountryList>> getCountryList();
 	
 	@POST("/x/passport-login/web/sms/send")
-	@API(BiliBiliAPI.PASSPORT_URL)
 	@FormUrlEncoded
 	Call<BaseResponse<Sms.Token>> sendSms(@Field("cid") int cid, @Field("tel") long phoneNum, 
 			@Field("source") String loginSource, @Field("token") String token, 
@@ -44,21 +40,21 @@ public interface ILoginApi {
 			@Field("seccode") String seccode);
 	
 	@POST("/x/passport-login/web/login/sms")
-	@API(BiliBiliAPI.PASSPORT_URL)
 	@FormUrlEncoded
 	Call<BaseResponse<Sms.LoginResult>> smsLogin(@Field("cid") int cid, @Field("tel") long phoneNum, 
 			@Field("code") int code, @Field("source") String loginSource, 
 			@Field("captcha_key") String token, @Field("go_url") String goUrl);
 	
 	@GET("/x/passport-login/web/key")
-	@API(BiliBiliAPI.PASSPORT_URL)
 	Call<BaseResponse<Password.KeyAndHash>> getKeyAndHash();
 	
 	@POST("/x/passport-login/web/login")
-	@API(BiliBiliAPI.PASSPORT_URL)
 	@FormUrlEncoded
 	Call<BaseResponse<Password.LoginResult>> passwordLogin(@Field("username") String username, @Field("password") String password, 
 			@Field("keep") int keep, @Field("token") String token, 
 			@Field("challenge") String challenge, @Field("validate") String validate, 
 			@Field("seccode") String seccode, @Field("source") String loginSource, @Field("go_url") String goUrl);
+	
+	@GET("/login/exit/v2")
+	Call<BaseResponse<Void>> exitLogin();
 }

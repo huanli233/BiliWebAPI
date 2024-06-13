@@ -78,6 +78,8 @@ public class HttpRequestInterceptor implements Interceptor {
 			} catch (IOException e) {
 				if (BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler() != null) {
 					BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler().handleError(e);
+				} else {
+					throw new RuntimeException(e);
 				}
 			}
         }
@@ -109,6 +111,8 @@ public class HttpRequestInterceptor implements Interceptor {
 			} catch (IOException e) {
 				if (BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler() != null) {
 					BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler().handleError(e);
+				} else {
+					throw new RuntimeException(e);
 				}
 			}
         }

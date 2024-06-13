@@ -9,7 +9,7 @@ import java.lang.annotation.Target;
 import com.huanli233.biliapi.BiliBiliAPI;
 
 @Retention(RetentionPolicy.RUNTIME)
-@Target({ ElementType.METHOD })
+@Target({ ElementType.METHOD, ElementType.TYPE })
 public @interface API {
 	String value() default BiliBiliAPI.BASE_API_URL;
 }
