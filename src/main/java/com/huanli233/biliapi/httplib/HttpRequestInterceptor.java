@@ -6,6 +6,7 @@ import java.util.Map;
 
 import com.huanli233.biliapi.BiliBiliAPI;
 import com.huanli233.biliapi.api.base.BaseResponse;
+import com.huanli233.biliapi.api.interfaces.IRequestParamApi;
 import com.huanli233.biliapi.api.requestparam.BiliTicket;
 import com.huanli233.biliapi.api.requestparam.Buvids;
 import com.huanli233.biliapi.api.utils.BiliTicketUtil;
@@ -25,7 +26,12 @@ import retrofit2.Invocation;
 public class HttpRequestInterceptor implements Interceptor {
 
 	public Response intercept(Chain chain) throws IOException { 
-		checkCookieParams();
+		Invocation invocation = chain.request().tag(Invocation.class);
+		if (invocation != null) {
+			if (invocation.service() != IRequestParamApi.class) {
+				checkCookieParams();
+			}
+		}
 		return chain.proceed(handleWbiSign(processUrlParam(overrideUrl(handleHeaders(handleCookies(chain)).build()))));
 	}
 	
@@ -72,8 +78,6 @@ public class HttpRequestInterceptor implements Interceptor {
 			} catch (IOException e) {
 				if (BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler() != null) {
 					BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler().handleError(e);
-				} else {
-					throw new RuntimeException(e);
 				}
 			}
         }
@@ -105,8 +109,6 @@ public class HttpRequestInterceptor implements Interceptor {
 			} catch (IOException e) {
 				if (BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler() != null) {
 					BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler().handleError(e);
-				} else {
-					throw new RuntimeException(e);
 				}
 			}
         }
