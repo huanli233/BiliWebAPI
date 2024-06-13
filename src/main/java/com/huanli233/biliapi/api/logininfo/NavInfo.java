@@ -2,21 +2,31 @@ package com.huanli233.biliapi.api.logininfo;
 
 import com.google.gson.annotations.Expose;
 import com.google.gson.annotations.SerializedName;
+import com.huanli233.biliapi.api.user.LevelInfo;
+import com.huanli233.biliapi.api.user.Official;
+import com.huanli233.biliapi.api.user.OfficialVerify;
+import com.huanli233.biliapi.api.user.Pendant;
+import com.huanli233.biliapi.api.user.VipLabel;
+import com.huanli233.biliapi.api.user.Wallet;
 
 import lombok.Data;
 
 @Data
-//TODO 完善等级信息level_info、认证信息official、认证信息2officialVerify、会员标签vip_label、B币信息wallet
 public class NavInfo {
 	@Expose private boolean isLogin;
 	@SerializedName("email_verified")
 	@Expose private int emailVerified;
 	@Expose private String face;
+	@SerializedName("level_info")
+	@Expose private LevelInfo levelInfo;
 	@Expose private long mid;
 	@SerializedName("mobile_verified")
 	@Expose private int mobileVerified;
 	@Expose private int money;
 	@Expose private int moral;
+	@Expose private Official official;
+	@Expose private OfficialVerify officialVerify;
+	@Expose private Pendant pendant;
 	@Expose private int scores;
 	@Expose private String uname;
 	@Expose private long vipDueDate;
@@ -26,10 +36,13 @@ public class NavInfo {
 	@Expose private int vipPayType;
 	@SerializedName("vip_theme_type")
 	@Expose private int vipThemeType;
+	@SerializedName("vip_label")
+	@Expose private VipLabel vipLabel;
 	@SerializedName("vip_avatar_subscript")
 	@Expose private int vipAvatarSubscript;
 	@SerializedName("vip_nickname_color")
 	@Expose private String vipNicknameColor;
+	@Expose private Wallet wallet;
 	@SerializedName("has_shop")
 	@Expose private boolean hasShop;
 	@SerializedName("shop_url")

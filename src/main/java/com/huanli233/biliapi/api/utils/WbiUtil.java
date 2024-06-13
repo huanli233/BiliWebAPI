@@ -40,6 +40,10 @@ public class WbiUtil {
 	        	BaseResponse<NavInfo> baseResponse = response.body();
 	        	if (baseResponse.getData() != null) {
 	        		String result = getWBIMixinKey(getFileFirstName(getFileNameFromLink(baseResponse.getData().getWbiImg().getImgUrl())) + getFileFirstName(getFileNameFromLink(baseResponse.getData().getWbiImg().getSubUrl())));
+	        		if (wbiSignKeyInfo == null) {
+						wbiSignKeyInfo = new WbiSignKeyInfo();
+						BiliBiliAPI.getInstance().getWbiSignDataManager().setWbiData(wbiSignKeyInfo);
+					}
 	        		wbiSignKeyInfo.setLastUpdateTimestamp(currentTimeStamp);
 	        		wbiSignKeyInfo.setMixinKey(result);
 	        		return result;

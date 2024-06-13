@@ -65,6 +65,14 @@ public class LoginInfo extends Base {
 		return BiliBiliAPI.getInstance().getApi(ILoginInfoApi.class).requestNavInfo();
 	}
 	
+	public static Call<BaseResponse<NavStat>> navStat() {
+		return BiliBiliAPI.getInstance().getApi(ILoginInfoApi.class).requestNavStat();
+	}
+	
+	public static Call<BaseResponse<CoinCount>> coinCount() {
+		return BiliBiliAPI.getInstance().getApi(ILoginInfoApi.class).requestCoinCount();
+	}
+	
 	public interface LoginInfoChangeListener {
 		void onLoginInfoChange(LoginInfo loginInfo);
 	}

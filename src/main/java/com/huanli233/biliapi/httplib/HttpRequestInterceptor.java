@@ -1,8 +1,15 @@
 package com.huanli233.biliapi.httplib;
 
 import java.io.IOException;
+import java.util.HashMap;
+import java.util.Map;
 
 import com.huanli233.biliapi.BiliBiliAPI;
+import com.huanli233.biliapi.api.base.BaseResponse;
+import com.huanli233.biliapi.api.requestparam.BiliTicket;
+import com.huanli233.biliapi.api.requestparam.Buvids;
+import com.huanli233.biliapi.api.utils.BiliTicketUtil;
+import com.huanli233.biliapi.api.utils.RequestParamUtil;
 import com.huanli233.biliapi.api.utils.WbiUtil;
 import com.huanli233.biliapi.httplib.annotations.API;
 import com.huanli233.biliapi.httplib.annotations.Queries;
@@ -18,6 +25,7 @@ import retrofit2.Invocation;
 public class HttpRequestInterceptor implements Interceptor {
 
 	public Response intercept(Chain chain) throws IOException { 
+		checkCookieParams();
 		return chain.proceed(handleWbiSign(processUrlParam(overrideUrl(handleHeaders(handleCookies(chain)).build()))));
 	}
 	
@@ -40,6 +48,89 @@ public class HttpRequestInterceptor implements Interceptor {
 				.header(HttpConstants.HeaderNames.SEC_CH_UA_PLATFORM, HttpConstants.HeaderValues.SEC_CH_UA_PLATFORM)
 				.header(HttpConstants.HeaderNames.SEC_CH_UA_MOBILE, HttpConstants.HeaderValues.SEC_CH_UA_MOBILE);
 	}
+	
+	private static final Map<String, String> otherCookieMap = new HashMap<>() {
+		private static final long serialVersionUID = 1L;
+	{
+        put("enable_web_push", "DISABLE");
+        put("header_theme_version", "undefined");
+        put("home_feed_column", "4");
+        put("browser_resolution", "839-959");
+    }};
+	private void checkCookieParams() {
+		Cookies cookies = BiliBiliAPI.getInstance().getLoginInfo().getCookies();
+
+        // bili_ticket
+        if (!cookies.containsKey("bili_ticket" ) || cookies.get("bili_ticket").equals("null") || !cookies.containsKey("bili_ticket_expires") || parseInt(cookies.get("bili_ticket_expires")) == null || parseInt(cookies.get("bili_ticket_expires")) < (int) (System.currentTimeMillis() / 1000)) {
+			try {
+				BaseResponse<BiliTicket> baseResponse = BiliTicketUtil.genBiliTicketSync();
+	            if (baseResponse != null) {
+					BiliTicket biliTicket = baseResponse.getData();
+					BiliBiliAPI.getInstance().getLoginInfo().getCookies().set("bili_ticket", biliTicket.getTicket());
+					BiliBiliAPI.getInstance().getLoginInfo().getCookies().set("bili_ticket_expires", String.valueOf(biliTicket.getCreatedTime() + (3 * 24 * 60 * 60)));
+				}
+			} catch (IOException e) {
+				if (BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler() != null) {
+					BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler().handleError(e);
+				} else {
+					throw new RuntimeException(e);
+				}
+			}
+        }
+
+        // _uuid
+        if (!cookies.containsKey("_uuid")) {
+        	BiliBiliAPI.getInstance().getLoginInfo().getCookies().set("_uuid", RequestParamUtil.gen_uuid_infoc());
+        }
+
+        // b_lsid
+        if (!cookies.containsKey("b_lsid")) {
+        	BiliBiliAPI.getInstance().getLoginInfo().getCookies().set("b_lsid", RequestParamUtil.gen_b_lsid());
+        }
+
+        // buvid_fp. Hardcoded.
+        if (!cookies.containsKey("buvid_fp")) {
+        	BiliBiliAPI.getInstance().getLoginInfo().getCookies().set("buvid_fp", /* gen_buvid_fp(NetWorkUtil.USER_AGENT_WEB + System.currentTimeMillis(), 31) */ "30c3020be6cee8345ddc4c3c6b77f60f");
+        }
+
+        // buvid3 & buvid4. Get from http API.
+        if (!cookies.containsKey("buvid3") || !cookies.containsKey("buvid4")) {
+        	try {
+				BaseResponse<Buvids> baseResponse = Buvids.generate().execute().body();
+	            if (baseResponse != null) {
+					Buvids buvids = baseResponse.getData();
+					BiliBiliAPI.getInstance().getLoginInfo().getCookies().set("buvid3", buvids.getBuvid3());
+					BiliBiliAPI.getInstance().getLoginInfo().getCookies().set("buvid4", buvids.getBuvid4());
+				}
+			} catch (IOException e) {
+				if (BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler() != null) {
+					BiliBiliAPI.getInstance().getRequestParamGenerateErrorHandler().handleError(e);
+				} else {
+					throw new RuntimeException(e);
+				}
+			}
+        }
+
+        // b_nut
+        if (!cookies.containsKey("b_nut")) {
+        	BiliBiliAPI.getInstance().getLoginInfo().getCookies().set("b_nut", RequestParamUtil.gen_b_nut());
+        }
+
+        // Others
+        for (Map.Entry<String, String> entry : otherCookieMap.entrySet()) {
+            if (!cookies.containsKey(entry.getKey())) {
+            	BiliBiliAPI.getInstance().getLoginInfo().getCookies().set(entry.getKey(), entry.getValue());
+            }
+        }
+	}
+	
+	private static Integer parseInt(String string) {
+        try {
+            return Integer.parseInt(string);
+        } catch (Throwable ignored) {
+            return null;
+        }
+    }
 	
 	private Request handleWbiSign(Request request) {
 		Invocation invocation;
@@ -66,7 +157,7 @@ public class HttpRequestInterceptor implements Interceptor {
 		Invocation invocation;
 		if (request == null || (invocation = (Invocation) request.tag(Invocation.class)) == null) return request;
 		API api;
-		if ((api = invocation.method().getAnnotation(API.class)) != null) {
+		if ((api = invocation.method().getAnnotation(API.class)) != null || (api = invocation.service().getAnnotation(API.class)) != null) {
 			return request.newBuilder()
 					.url(request.url().newBuilder().host(api.value()).build())
 					.build();
